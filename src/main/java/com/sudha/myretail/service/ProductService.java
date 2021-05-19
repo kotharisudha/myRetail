@@ -1,6 +1,9 @@
 package com.sudha.myretail.service;
 
+import com.sudha.myretail.common.Constants;
 import com.sudha.myretail.dao.ProductRepository;
+import com.sudha.myretail.exception.AlreadyExistsException;
+import com.sudha.myretail.exception.ProductNotFoundException;
 import com.sudha.myretail.model.Price;
 import com.sudha.myretail.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,18 +11,13 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ProductService {
-
-    public static final String ID = "id";
-    public static final String DATA = "data";
-    public static final String NAME = "name";
-
-
-    private static final String GET_NAME_BY_ID = "https://gorest.co.in/public-api/products/{id}";
-    private static final String GET_PRICE_BY_ID = "https://run.mocky.io/v3/5d6573fc-1051-41e6-8b4d-11f46eef06b8";
 
     private final ProductRepository productRepository;
        
@@ -31,7 +29,7 @@ public class ProductService {
     public Optional<Product> getProduct(Long id)
     {
         Optional<Product> product = Optional.ofNullable(productRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("Unsupported value: " + id)));
+                () -> new ProductNotFoundException("Product doesn't exist")));
 
         product.get().setName(getNameById(id));
         product.get().setCurrentPrice(getPriceById(id));
@@ -42,12 +40,12 @@ public class ProductService {
     private String getNameById(Long id) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String,Long> requestParams =new HashMap<>();
-        requestParams.put(ID, id);
+        requestParams.put(Constants.ID, id);
 
         Map productMap =
-                restTemplate.getForObject(GET_NAME_BY_ID, Map.class,requestParams);
-        Map data= (Map) productMap.get(DATA);
-        return (String) data.get(NAME);
+                restTemplate.getForObject(Constants.GET_NAME_BY_ID_URL, Map.class,requestParams);
+        Map data= (Map) productMap.get(Constants.DATA);
+        return (String) data.get(Constants.NAME);
     }
 
     private Price getPriceById (Long id) {
@@ -57,7 +55,7 @@ public class ProductService {
         HttpEntity<String> request = new HttpEntity<>(httpHeaders);
 
         ResponseEntity<Price> response =
-                restTemplate.exchange(GET_PRICE_BY_ID, HttpMethod.GET, request, Price.class );
+                restTemplate.exchange(Constants.GET_PRICE_BY_ID_URL, HttpMethod.GET, request, Price.class );
 
         return response.getBody();
     }
@@ -66,7 +64,7 @@ public class ProductService {
         Optional<Product> productOptional =
                 productRepository.findProductByName(product.getName());
 
-        if(productOptional.isPresent()) throw new IllegalArgumentException("Product already exists");
+        if(productOptional.isPresent()) throw new AlreadyExistsException("Product already exists");
         productRepository.save(product);
     }
 }

@@ -1,6 +1,7 @@
 package com.sudha.myretail.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table
@@ -16,6 +17,8 @@ public class Product {
             generator = "product_sequence"
     )
     private Long id;
+
+    @NotBlank
     private String name;
     @Transient
     private Price currentPrice;
