@@ -1,30 +1,33 @@
 # myRetail
-myRetail RESTful service is a REST API example application
+myRetail RESTful service is a REST API example application.
 
 This is a bare-bones example of a retail application providing a REST API for product management.
 The application looks up for product name for a publicly available API and the price of the product is from a mocked API.
 
 The entire application is contained within the jar file.
-
 The minimal configuration required is a postgres DB in case one wants to add product to the DB.
 
 
-Install
+# Install
 mvn clean install
-Run the app
-java -jar myRetail-1.0.0-SNAPSHOT
 
-#Run the tests
+# Run the app
+java -jar myRetail-1.0.0-SNAPSHOT.jar
 
-REST API
+# Run the tests
+<TO DO>
+
+## REST API
 The REST API to the myRetail app is described below.
 
-Get a specific product
+### Get a specific product
+
 Request
 GET /products/id
 http://localhost:8080/products/1
 
 Response
+
 HTTP/1.1 200 
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -43,18 +46,20 @@ Connection: keep-alive
 
 Response code: 200; Time: 8763ms; Content length: 88 bytes
 
-###
+### Create a new product
 
-Create a new Product
 Request
 POST /products/
 
 POST http://localhost:8080/products/
 Content-Type: application/json
 
+RequestBody
+
 {"name":"Pulse Oximeter","price":40.0}
 
 Response
+
 HTTP/1.1 201 
 Content-Length: 0
 Date: Wed, 19 May 2021 09:59:14 GMT
