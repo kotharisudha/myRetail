@@ -3,6 +3,8 @@ package com.sudha.myretail.controller;
 import com.sudha.myretail.model.Product;
 import com.sudha.myretail.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,7 +27,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public void addProduct(@Valid @RequestBody Product product) {
-         productService.addProduct(product);
+    public ResponseEntity addProduct(@Valid @RequestBody Product product) {
+        productService.addProduct(product);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }
