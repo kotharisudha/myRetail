@@ -32,7 +32,7 @@ public class Product {
         this.currentPrice = price;
     }
 
-    public Product(String name, String category, Price price) {
+    public Product(String name, Price price) {
         this.name = name;
         this.currentPrice = price;
     }
