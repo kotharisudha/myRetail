@@ -47,8 +47,6 @@ public class ProductControllerTest {
     RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/products/1").accept(MediaType.APPLICATION_JSON);
     MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-    System.out.println("Response :: "+ result.getResponse().getContentAsString());
-
     String expected = "{\n" +
             "  \"id\": 1,\n" +
             "  \"name\": \"Pulse Oximeter\",\n" +
@@ -93,7 +91,6 @@ public class ProductControllerTest {
     assertEquals("", response.getContentAsString());
    }
 
-
     @Test
     public void createProduct_AlreadyExists() throws Exception {
         String requestBody = "{\"name1\":\"Thermometer\",\"price\":10}";
@@ -116,6 +113,7 @@ public class ProductControllerTest {
     public void createProduct_InvalidContentType() throws Exception {
         String requestBody = "{\"name\":\"Thermometer\",\"price\":10}";
         Product product = new Product("Thermometer", new Price("10", "USD"));
+
         doNothing().when(productService).addProduct(product);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
